@@ -204,9 +204,8 @@ impl State {
 
     #[allow(clippy::cast_sign_loss, clippy::cast_possible_wrap)]
     fn make_move(&self, direction: Direction) -> Option<Self> {
-        let mut result = self.clone();
-
         if self.can_move(direction) {
+            let mut result = self.clone();
             let (i, j) = self.index_to_position(self.slot);
             let (ii, jj) = direction.position_tuple();
 
@@ -232,15 +231,13 @@ impl State {
     }
 
     fn manhattan_distance(&self) -> usize {
-        let mut dist = 0;
-
-        for i in 0..self.rows * self.cols {
-            let pos = self.index_to_position(self.board[i]);
-            let cor = self.index_to_position(i);
-            dist += pos.0.abs_diff(cor.0) + pos.1.abs_diff(cor.1);
-        }
-
-        dist
+        (0..self.rows * self.cols)
+            .map(|i| {
+                let pos = self.index_to_position(self.board[i]);
+                let cor = self.index_to_position(i);
+                pos.0.abs_diff(cor.0) + pos.1.abs_diff(cor.1)
+            })
+            .sum()
     }
 
     fn is_final(&self) -> bool {
