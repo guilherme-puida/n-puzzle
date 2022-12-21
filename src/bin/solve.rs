@@ -28,5 +28,5 @@ pub fn main() {
         .unwrap()
         .moves;
 
-    println!("{}", moves.iter().join(" "));
+    println!("{}\n{}", moves.iter().join(" "), moves.len());
 }
