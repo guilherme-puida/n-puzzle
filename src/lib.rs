@@ -163,7 +163,9 @@ impl State {
     pub fn solve(&self) -> Option<Self> {
         let mut heap = BinaryHeap::with_capacity(100_000);
         heap.push(self.clone());
-        let mut visited = HashSet::from([self.clone()]);
+
+        let mut visited = HashSet::with_capacity(100_000);
+        visited.insert(self.clone());
 
         loop {
             let current = heap.pop()?;
@@ -175,8 +177,7 @@ impl State {
             let possible_moves = current.possible_moves();
 
             for m in possible_moves {
-                if !visited.contains(&m) {
-                    visited.insert(m.clone());
+                if visited.insert(m.clone()) {
                     heap.push(m);
                 }
             }
@@ -233,9 +234,13 @@ impl State {
     fn manhattan_distance(&self) -> usize {
         (0..self.rows * self.cols)
             .map(|i| {
-                let pos = self.index_to_position(self.board[i]);
-                let cor = self.index_to_position(i);
-                pos.0.abs_diff(cor.0) + pos.1.abs_diff(cor.1)
+                if i == self.slot {
+                    0
+                } else {
+                    let pos = self.index_to_position(self.board[i]);
+                    let cor = self.index_to_position(i);
+                    pos.0.abs_diff(cor.0) + pos.1.abs_diff(cor.1)
+                }
             })
             .sum()
     }

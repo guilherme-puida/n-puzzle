@@ -9,4 +9,4 @@ for i in $sources; do
   echo "solving $i"
   time ./target/release/solve < ./inputs/$i.input
   echo
-done | tee report
+done |& tee report
